@@ -32,10 +32,11 @@ function SpawnCars(): Car[] {
   let cars: Car[] = [];
   for (let i = 0; i < Level_Grid.length; i++) {
     if (Level_Grid[i] == TileType.car1Spawn) {
+      let newId = cars.length + 1;
       let tile = IndexToGridCoord(i);
       let pos = GridCoordToScreenCoord(tile.col, tile.row);
       console.log({ i, tile, pos });
-      cars.push(new Car(pos.x + Tile_W / 2, pos.y + Tile_H / 2));
+      cars.push(new Car(pos.x + Tile_W / 2, pos.y + Tile_H / 2, newId.toString()));
       Level_Grid[i] = TileType.none;
     }
   }

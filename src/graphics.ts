@@ -1,6 +1,5 @@
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const canvas = document.createElement('canvas');
-const carImage = document.querySelector<HTMLImageElement>('#car1');
 app.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const Two_Pi = Math.PI * 2;
@@ -35,11 +34,6 @@ function DrawText(text: string, x: number, y: number, color = '#FFF', font = '10
   ctx.fillText(text, x, y);
 }
 
-function DrawCarImage(x: number, y: number, rotation: number = 0) {
-  if (!ctx) return;
-  DrawCenteredImage(carImage, x, y, rotation);
-}
-
 function DrawCenteredImage(img: any, x: number, y: number, rotation: number = 0) {
   if (!ctx) return;
   ctx.save();
@@ -49,4 +43,4 @@ function DrawCenteredImage(img: any, x: number, y: number, rotation: number = 0)
   ctx.restore();
 }
 
-export { canvas, DrawBackground, DrawCarImage, DrawCircle, DrawRect, DrawText };
+export { canvas, DrawBackground, DrawCenteredImage, DrawCircle, DrawRect, DrawText };

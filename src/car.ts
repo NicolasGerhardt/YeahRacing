@@ -1,5 +1,8 @@
-import { DrawCarImage } from './graphics';
-import { Keys } from './input';
+import { DrawCenteredImage } from './graphics';
+import { Keys } from './keys';
+
+const car1Image = document.querySelector<HTMLImageElement>('#car1');
+const car2Image = document.querySelector<HTMLImageElement>('#car2');
 
 const acc = 0.1;
 const turningSpeed = 0.05;
@@ -15,7 +18,7 @@ export default class Car {
   heading: number;
   vel = 0;
 
-  constructor(x: number, y: number, rotation = -Math.PI / 2, id = 'car') {
+  constructor(x: number, y: number, id: string, rotation = -Math.PI / 2) {
     this.x = x;
     this.y = y;
     this.id = id;
@@ -23,7 +26,12 @@ export default class Car {
   }
 
   Draw() {
-    DrawCarImage(this.x, this.y, this.heading + imageRotationOffset);
+    if (this.isPlayerOne()) {
+      DrawCenteredImage(car1Image, this.x, this.y, this.heading + imageRotationOffset);
+    }
+    if (this.isPlayerTwo()) {
+      DrawCenteredImage(car2Image, this.x, this.y, this.heading + imageRotationOffset);
+    }
   }
 
   Update() {
@@ -37,7 +45,24 @@ export default class Car {
     this.vel *= -0.3;
   }
 
+  private isPlayerOne(): boolean {
+    return this.id.indexOf('1') > -1;
+  }
+
+  private isPlayerTwo(): boolean {
+    return this.id.indexOf('2') > -1;
+  }
+
   private HandleInputs() {
+    if (this.isPlayerOne()) {
+      this.HandleP1Inputs();
+    }
+    if (this.isPlayerTwo()) {
+      this.HandleP2Inputs();
+    }
+  }
+
+  private HandleP1Inputs() {
     if (Keys.Up_Arrow.isPressed) {
       this.vel += acc;
     }
@@ -56,11 +81,26 @@ export default class Car {
     }
   }
 
-  private MoveCar() {
-    // if (Math.abs(this.vel) < 0.09) {
-    //   this.vel = 0;
-    // }
+  private HandleP2Inputs() {
+    if (Keys.w.isPressed) {
+      this.vel += acc;
+    }
 
+    if (Keys.s.isPressed) {
+      this.vel *= friction * friction;
+      this.vel -= acc;
+    }
+
+    if (Keys.a.isPressed && Math.abs(this.vel) > acc * 2) {
+      this.heading -= turningSpeed;
+    }
+
+    if (Keys.d.isPressed && Math.abs(this.vel) > acc * 2) {
+      this.heading += turningSpeed;
+    }
+  }
+
+  private MoveCar() {
     this.vel *= friction;
     this.vel = Math.min(this.vel, maxSpeed);
     this.vel = Math.max(this.vel, masReverseSpeed);
